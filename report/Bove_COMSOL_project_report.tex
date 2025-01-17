@@ -1,4 +1,5 @@
 \documentclass[lettersize,journal]{IEEEtran}
+\def\MakeUppercaseUnsupportedInPdfStrings{\scshape}
 \usepackage{amsmath,amsfonts}
 \usepackage{algorithmic}
 \usepackage{algorithm}
@@ -7,24 +8,13 @@
 \usepackage{textcomp}
 \usepackage{stfloats}
 \usepackage{url}
+\usepackage{hyperref}
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage[backend=bibtex]{biblatex}
 \usepackage[utf8]{inputenc}
-%\usepackage{tikz}
 \usepackage{pgfplots}
-
-\pgfplotsset{width=4cm,compat=newest}
-
-% Externalize PGF figures
-\usepgfplotslibrary{external}
-\tikzexternalize
-
-
-%\DeclareUnicodeCharacter{2212}{−}
-%\usepgfplotslibrary{groupplots,dateplot}
-%\usetikzlibrary{patterns,shapes.arrows}
-%\pgfplotsset{compat=newest}tikztikz
+\usepackage{tikz}
 
 \addbibresource{ref.bib}
 \graphicspath{{./images/}}
@@ -41,18 +31,18 @@
     \maketitle
 	
     \begin{abstract}
-        This paper presents the mechanical response of a MEMS dual-axis accelerometer with T-shaped beams for different values of X and Y axes accelerations. The original design idea and simulation are taken from an excerpt from the \textit{Proceedings of the 2015 COMSOL} Conference in Boston \cite{original}. The aim of this paper is to validate the results obtained in the reference through a COMSOL 6.0 Multiphysics simulation. The results show the inertial mass displacement and the induced stress. Beams equivalent elastic constants and displacement sensitivities to accelerations (\(S_{dx}\), \(S_{dy}\)) along X and Y axes were evaluated and compared to theoretical forecasts. Accelerations up to 50g were simulated. Moreover, the dependence of the  sensitivity along the X axis was evaluated for different values of the spring arms' dimensions \(w_{bx}\) and \(t_{bx}\). The obtained results are compared with the theoretical models proposed in the referenced paper.
+        This paper presents the mechanical response of a MEMS dual-axis accelerometer with T-shaped beams for different values of X and Y axes accelerations. The original design idea and simulation are taken from an excerpt from the \textit{Proceedings of the 2015 COMSOL} Conference in Boston \cite{original}. The aim of this paper is to validate the results obtained in the reference through a COMSOL 6.0 Multiphysics simulation. The results show the inertial mass displacement and the induced stress. Beams equivalent elastic constants and displacement sensitivities to accelerations (\(S_{x}\), \(S_{y}\)) along X and Y axes were evaluated and compared to theoretical forecasts. Accelerations up to 50g were simulated. Moreover, the dependence of the  sensitivity along the X axis was evaluated for different values of the spring arms' dimensions \(w_{bx}\) and \(t_{bx}\). The obtained results are compared with the theoretical models proposed in the referenced paper.
     \end{abstract}
 	
     \section{Introduction}
-        \IEEEPARstart{N}{}owadays, MEMS accelerometers have an extensive applications range: consumer electronics, automotive systems, aerospace, and robotics. Small size, together with low power consumption and cost-effectiveness, turn them into the basis in inertial navigation and motion sensing. One critical evolution in the technology for MEMS accelerometers involves the development of dual-axis devices that can measure accelerations along two orthogonal axes in a single package. These designs improve integration efficiency and reduce the complexity of aligning several single-axis accelerometers.
+        \IEEEPARstart{N}{owadays}, MEMS accelerometers have an extensive applications range: consumer electronics, automotive systems, aerospace, and robotics. Small size, together with low power consumption and cost-effectiveness, turn them into the basis in inertial navigation and motion sensing. One critical evolution in the technology for MEMS accelerometers involves the development of dual-axis devices that can measure accelerations along two orthogonal axes in a single package. These designs improve integration efficiency and reduce the complexity of aligning several single-axis accelerometers.
         
         This report focuses on the analysis and optimization of a MEMS dual-axis accelerometer featuring T-shaped beams. The special geometry of these beams allows for the measurement of accelerations along both the X and Y axes through differential capacitance sensing. Theoretical basics of the accelerometer design, as mentioned in the referred article, are modeled and simulated in COMSOL Multiphysics.
         
         The main objectives of this study are:
         \begin{itemize}
         \item Calculating the displacement of the inertial mass and the induced stress for several acceleration inputs along both the X and Y axes. The range of accelerations is the same as the one simulated in the original paper, i.e. up to 50g in both directions.
-        \item Obtaining the equivalent elastic constants of the beams and the device displacement sensitivity to accelerations, \(S_{dx}\) and \(S_{dy}\), in both axes.
+        \item Obtaining the equivalent elastic constants of the beams and the device displacement sensitivity to accelerations, \(S_{x}\) and \(S_{y}\), in both axes.
         \item Carrying out a parametric analysis to study the dependence of sensitivity, \(S_{dx}\), on the spring arm dimensions \(w_{bx}\) and \(t_{bx}\).
         \item Comparing simulation results with theoretical predictions in order to validate the model and identify areas for possible design improvements.
         \end{itemize}
@@ -62,9 +52,8 @@
         
         The central movable mass is anchored through two T-shape beams. Each T-shape beam consists of one straight beam and two folded beams.
         
-        Attached to the central mass, there are 64 movable fingers, divided into 8 groups. Each side of the central mass has 2 groups of fingers. Each of them faces one fixed finger and the capacitance between those is used to sense the external acceleration. The vertical fingers (aligned along the Y axis) together with the straight beams are used to sense acceleration along X direction, so they are called X-beams and X-capacitance groups. On the other hand, the horizontal fingers (aligned along the X axis) together with the folded beams are used to sense acceleration along Y direction, so they are called Y-beams and Y-capacitance groups. Due to the symmetry of the device, two of the four groups of X movable fingers have fixed fingers on the left side, whereas the other two groups have them on the right. Similarly, this apply to Y-movable fingers groups: two of them have fixed fingers in the upper side, the other two on the down side. This is helpful for obtaining a differential capacitance, as will be explained in \ref{sssec:capacity}.
+        Attached to the central mass, there are 64 movable fingers, divided into 8 groups. Each side of the central mass has 2 groups of fingers. Each of them faces one fixed finger and the capacitance between those is used to sense the external acceleration. The vertical fingers (aligned along the Y axis) together with the straight beams are used to sense acceleration along X direction, so they are called X-beams and X-capacitance groups. On the other hand, the horizontal fingers (aligned along the X axis) together with the folded beams are used to sense acceleration along Y direction, so they are called Y-beams and Y-capacitance groups. Due to the symmetry of the device, two of the four groups of X movable fingers have fixed fingers on the left side, whereas the other two groups have them on the right. Similarly, this apply to Y-movable fingers groups: two of them have fixed fingers in the upper side, the other two on the down side. This is helpful for obtaining a differential capacitance, as will be explained in section \ref{sssec:capacity}.
         
-        %\includegraphics{full_dev}
         
         \begin{figure}[h!]
             \centering
@@ -73,7 +62,7 @@
             \label{fig:dev-struct}
         \end{figure}
         
-        \subsection{Device Geometrical Sizing}
+        \subsection{Device Geometrical Sizing}\label{ssec:geometry}
         A detailed view of the geometrical model used in this COMSOL simulation is presented in figure \ref{fig:dev_quotes}. As anticipated, in order to reduce the size of the model, only \(\frac{1}{8}\) of the whole device was simulated, taking advantage of the symmetries along X, Y and Z axes.
         
         \begin{figure}[h!]
@@ -86,6 +75,7 @@
         Table \ref{tab:size} shows all the geometrical parameters of the device, which are identical to those used in \cite{original}. The only dimensions that were missing are those of the folded beams junction element.
         
         \begin{table}[h!]
+            \renewcommand{\arraystretch}{1.5}
             \centering
             \caption{Device components dimensions}
             \label{tab:size}
@@ -123,11 +113,18 @@
             \label{fig:ff-detail}
         \end{figure}
         
-        The fingers of each group are assumed to be equally spaced and this spacing is the same for both the vertical and the horizontal groups. This spacing is parametrically defined from the available space for the movable fingers in the upper mass side, where the width of the straight beam must be taken into account. This distance between each movable and fixed fingers \(d\) is defined as follows:
+        The fingers of each group are assumed to be equally spaced and this spacing is the same for both the vertical and the horizontal groups. This spacing is parametrically defined from the available space for the movable fingers in the upper mass side, where the width of the straight beam must be taken into account. The free space between each fixed finger \(d\) is defined as follows:
         
         \begin{equation}
-            d = \frac{\frac{L_m}{2}-8*(w_{mf}+w_{ff})-\frac{w_{bx}}{2}}{16}
+            d = \frac{\frac{L_m}{2}-8*(w_{mf}+w_{ff})-\frac{w_{bx}}{2}}{8}=
         \end{equation}
+        
+        Therefore, the pitch of the fixed (movable) fingers is equivalent to:
+        
+        \begin{equation}
+            pitch = d+w_{mf}+w_{ff}
+        \end{equation}
+        The distance between each movable finger and its adjacent fixed fingers is not the same: as we can see from  figure \ref{fig:ff-detail}, in the upper-right side of the device the vertical movable fingers are positioned so that the fixed finger on the right is at distance \(\frac{d}{20}=1.4375\mu m\), whereas the one on the left is at distance \(d-\frac{d}{20}=27.3125\mu m\), which is much larger than the first one; on the other hand, thanks to the symmetry, the vertical movable fingers of the upper-left side are much closer the the fixed fingers on their left. Similarly, the same arrangement is used for the horizontal fingers, which are symmetric between the top and bottom sides. This will be helpful for the measurement of the differential capacitance, see section \ref{sssec:capacity}.
         
         Also the overlapping between the movable and fixed fingers had to be assumed and it was parametrically defined for both the vertical (\(L_{ov,v}\)) and horizontal (\(L_{ov,h}\)) fingers and set to \(L_{ov,v}=L_{ov,h}=380\mu m\).
         
@@ -136,13 +133,166 @@
         \subsection{Theoretical Analysis}
         We now discuss the mathematical models used to predict the behaviour of this system.
         
-        \subsubsection{Beams Stiffness}
-        The simplified mechanical model of the system is the following:
+        \subsubsection{Beams Stiffness}\label{sssec:stiffness}
+        The simplified mechanical model of the system is presented in figure \ref{fig:model}.
         
+        \begin{figure}[!h]
+            \centering
+            \input{tikz/mechanical_model.tex}
+            \caption{Simplified mechanical model of the dual axis accelerometer.}
+            \label{fig:model}
+        \end{figure}
+        
+        Here, \(k_x\) and \(k_y\) are the \textbf{equivalent stiffness constants} of the springs that allow, respectively, displacements along the X axis and the Y axis; \(B_x\) and \(B_y\) are the equivalent damping constants along the two axis, but they are not relevant in this study, given that we are evaluating the steady state of the system; \(m\) is the total inertial mass, i.e. the mass of the central block and of the movable fingers. \(m\) is given by the following equation:
+        
+        \begin{equation}\label{eq:mass}
+            m=\rho_{poly} \cdot (w_m l_m t_m + 64\cdot w_{mf} l_{mf} t_{mf})
+        \end{equation}
+        
+        where we neglect the mass of the beams.
+        If we now assume that all the displacement along the X axis is due to the bending of the two straight beams and that the displacement along the Y axis is due to deformation of the two folded beams, we can say that \(k_x\) is equal to the equivalent spring constant of the straight beams combined and \(k_y\) is the one of the folded beams. We will also assume that there is no cross stiffness constant, i.e. we can neglect any displacement along the X axis due to forces along the Y axis and vice versa.
+        
+        Given these hypothesis, we can model the straight beam to be rigidly attached to the end of the folded beam (which we supposed to be fixed for X accelerations) and to have a roller, i.e. a guided end, on the other side, due to the infinitely rigid central mass, as shown in figure \ref{fig:straight_beam_model}. We suppose that all the force due to the acceleration of the inertial mass is concentrated at the right end of the beam.
+        
+        \begin{figure}[!h]
+            \centering
+            \input{tikz/beam_model.tex}
+            \caption{Straight beam model. On the right there is the central mass.}
+            \label{fig:straight_beam_model}
+        \end{figure}
+        
+        The equivalent stiffness constant of this type of structure, due to a force along the X axis concentrated at the right end, is well known in the scientific literature and is given by the following equation:
+        
+        \begin{equation}\label{eq:straight_beam_k_symbol}
+            k_{straight} = 12\frac{EJ}{L^3}
+        \end{equation}
+        
+        where \(E\) is the Young's modulus of the polysilicon, \(L\) is the length of the beam and \(J\) is the moment of inertia of the beam's section, due to a bending moment along the z axis (see the reference plane used in figure \ref{fig:straight_beam_model}). In our case:
+        
+        \begin{equation}\label{eq:j_straight}
+            J=\frac{bh^3}{12}=\frac{t_{bx}w^3_{bx}}{12}
+        \end{equation}
+        
+        Hence, the equivalent stiffness of one straight beam is
+        
+        \begin{equation}\label{eq:straight_beam_k_x}
+            k_{straight,x} = \frac{Et_{bx}w^3_{bx}}{L^3_{bx}}
+        \end{equation}
+        
+        Given that the two straight beams undergo the same displacement, thanks to the symmetry of the model, we can easily consider the two springs in parallel and the total x stiffness will be given by the sum of the two spring constants:
+        
+        \begin{equation}\label{eq:k_x}
+            k_x = 2\cdot k_{straight,x}=2\frac{Et_{bx}w^3_{bx}}{L^3_{bx}}=31.5335N/m
+        \end{equation}
+        
+        For what concerns the stiffness along the Y axis, we can model the two segments of the folded beam as in figure \ref{fig:straight_beam_model}, therefore each segment has the same stiffness as the straight beam, taking into account the different geometrical dimensions.
+        
+        \begin{equation}\label{eq:straight_beam_k_y}
+            k_{straight,y} = \frac{Et_{by}w^3_{by}}{L^3_{by}}
+        \end{equation}
+        
+        The two segments are attached one to the other through the junction segment, which is supposed to be infinitely rigid and not to be able to bend, due to its aspect ratio. For this reason we can model it as a roller. Given that the two segment are mechanically in series and they have the same spring constant, the total stiffness is half of a single one:
+        
+        \begin{equation}\label{eq:folded_k}
+            k_{folded}=\frac{k_{straight,y}\cdot k_{straight,y}}{k_{straight,y}+k_{straight,y}}=\frac{k_{straight,y}}{2}
+        \end{equation}
+        
+        Now, given that for each T beam there are two folded beams and that all of them undergo the same displacement (as absolute value), we can model these four springs as if they were in parallel and the total y stiffness is given by the following equation:
+        
+        \begin{equation}\label{eq:k_y}
+            k_y = 4\cdot k_{folded}=4\frac{k_{straight,y}}{2}=2\frac{Et_{by}w^3_{by}}{L^3_{by}}=31.5335N/m
+        \end{equation}
+        
+        However, we need to keep in mind that the COMSOL model will be only \(\frac{1}{8}\) of the total model, as explained in section \ref{ssec:geometry}. Therefore, the spring dimensions will be different and the inertial mass will be \(\frac{1}{8}\)
+         of the total inertial mass. We can find an analytical relationships between the reduced spring constants and the complete ones, so that we can compare the output of the simulation with the theoretical model.
+         
+         Thanks to the symmetry of the model, we can affirm that the stiffness of the reduced springs will be \(\frac{1}{8}\) of the total corresponding springs, because it is possible to see all the reduced springs as if they were in parallel to each other.
+         
+         \begin{equation}\label{eq:k_x_red}
+             k_{x,reduced}=\frac{k_x}{8}
+         \end{equation}
+         
+         \begin{equation}\label{eq:k_y_red}
+             k_{y,reduced}=\frac{k_y}{8}
+         \end{equation}
+         
+         %Any object will have half of its thickness, because every domain is symmetric along the Z axis. The other dimensions can be seen in figure \ref{fig:dev_quotes}.
+         
+         %\begin{equation}\label{eq:k_x_red}
+         %    k_{x,reduced}=\frac{E\frac{t_{bx}}{2}\left(\frac{w_{bx}}{2}\right)^3}{L^3_{bx}}=\frac{k_x}{32}
+         %\end{equation}
+         
+         %\begin{equation}\label{eq:k_y_red}
+         %    k_{y,reduced}=\frac{1}{2}\frac{E\frac{t_{by}}{2}w^3_{by}}{L^3_{by}}=\frac{k_y}{8}
+         %\end{equation}
+         
+        This coefficients will be multiplied by the spring constants found in simulation.
         
         \subsubsection{Displacement Sensitivity To Accelerations}
+        The \textbf{displacement sensitivity} is defined as the displacement of the movable fingers when \(1g\) of acceleration is applied. Therefore, considering the equivalent mechanical model of the system, we can evaluate the sensitivity along the two axes. Since we neglected the cross stiffness, the displacement is given by the following equations:
+        
+        \begin{equation}\label{eq:x_disp}
+            \Delta x = \frac{F_x}{k_x}
+        \end{equation}
+        
+        \begin{equation}\label{eq:y_disp}
+            \Delta y = \frac{F_y}{k_y}
+        \end{equation}
+        
+        where \(F_x\) and \(F_y\) are the equivalent forces along the respective axis, due to an acceleration of the inertial mass.
+        Hence, the sensitivities:
+        
+        \begin{equation}\label{eq:x_sens}
+            \begin{split}
+                S_x & = \left. \Delta x\right|_{a_x=1g,a_y=0}=\left. \frac{ma_x}{k_x} \right|_{a_x=1g,a_y=0} \\
+                & =\frac{\rho_{poly} \cdot (w_m l_m t_m + 64\cdot w_{mf} l_{mf} t_{mf})gL^3_{bx}}{2\cdot Et_{bx}w^3_{bx}} \\
+                & = 0.002587\mu m
+            \end{split}
+        \end{equation}
+        
+        \begin{equation}\label{eq:y_sens}
+            \begin{split}
+                S_y & = \left. \Delta y\right|_{a_y=1g,a_x=0}=\left. \frac{ma_y}{k_y} \right|_{a_y=1g,a_x=0} \\
+                & =\frac{\rho_{poly} \cdot (w_m l_m t_m + 64\cdot w_{mf} l_{mf} t_{mf})gL^3_{by}}{2\cdot Et_{by}w^3_{by}} \\
+                & = 0.002587\mu m
+            \end{split}
+        \end{equation}
+        
         \subsubsection{Capacitance Sensing}\label{sssec:capacity}
-        As anticipated before, thanks to the mirrored position of the fixed fingers relative to the movable fingers (e.g. in the upper-right side fixed fingers are on the right of their movable fingers, whereas in the upper-left side the opposite happens) differential capacitance can be measured to sense the displacement of the mass due to inertial force.
+        As anticipated before, thanks to the mirrored position of the fixed fingers relative to the movable fingers (e.g. in the upper-right side fixed fingers are on the right of their respective movable fingers, whereas in the upper-left side the opposite happens) differential capacitance can be measured to sense the displacement of the mass due to inertial force.
+        
+        Each movable finger will have two equivalent parallel capacitances with the adjacent fixed fingers, if the fixed fingers are set at the same voltage. However, as shown in figure \ref{fig:ff-detail}, the capacitance with the nearest fixed finger is much greater than the other, which can therefore be neglected.
+        
+        When there is no acceleration, the capacitance gap between each movable finger and its nearest fixed finger is the same and equal to \(d_0=\frac{d}{20}\), therefore the differential capacitance between the left/right (top/bottom) X (Y) capacitance groups is zero.
+        
+        When a positive X axis acceleration is applied, due to inertial force, the movable fingers move towards right by a displacement x: the right capacitance gap is now \(d_r=d_0-x\), whereas the left capacitance gap is \(d_l=d_0+x\) (see figure \ref{fig:capacitance_drawing}).
+        
+        \begin{figure}[!h]
+            \centering
+            \input{tikz/capacitance_drawing.tex}
+            \caption{Capacitance gap variations when an X axis acceleration is applied. Detail of the upper side of the device.}
+            \label{fig:capacitance_drawing}
+        \end{figure}
+        
+        Therefore, we can evaluate the differential X capacitance, defined as the difference between the total right and left groups' capacitances:
+        
+        \begin{equation}\label{eq:x_cap_calc}
+            \Delta C_x = C_r - C_l = 2N_x\left(\frac{\epsilon_{0}\epsilon_{r}S}{d_0-x}-\frac{\epsilon_{0}\epsilon_{r}S}{d_0+x}\right)
+        \end{equation}
+        
+        where \(S=t_{mf}L_{ov,v}\) is the overlap area between a movable finger and its nearest fixed finger and \(N_x\) is the number of movable fingers in a single X capacitance group. This value is doubled, given that there are two right X capacitance groups and two left ones.
+        This expression can be approximated for small displacements:
+        
+        \begin{equation}\label{eq:x_cap_approx}
+            \Delta C_x \cong 4N_x\frac{\epsilon_{0}\epsilon_{r}S}{d_0}\cdot\left(\frac{x}{d_0}\right)
+        \end{equation}
+        
+        Similarly, if we define \(y\) as the vertical displacement, the differential horizontal fingers capacitance can be approximated as follows:
+        
+        \begin{equation}\label{eq:y_cap_approx}
+            \Delta C_y \cong 4N_y\frac{\epsilon_{0}\epsilon_{r}S}{d_0}\cdot\left(\frac{y}{d_0}\right)
+        \end{equation}
+        
         
     
     \section{COMSOL Multiphysics}
@@ -159,13 +309,10 @@
         \caption{Symmetry planes, (a) \(y=0\), (b) \(x=0\) and (c) \(z=0\).}
         \label{fig:symmetry-planes}
     \end{figure*}
-    \subsection{Simulation Setup}
-        The COMSOL modules used for the simulation of the analysed system are:
-        \begin{itemize}
-            \item \textit{Solid Mechanics}
-            \item \textit{Electrostatics}
-            \item \textit{Electromechanics}        
-        \end{itemize}
+        The device was simulated using COMSOL Multiphysics 6.0.
+        
+        The only COMSOL module used for the simulation of the analysed system is \textit{Solid Mechanics}, because in this study we are not interested in evaluating the capacitance of the device, but only its mechanical properties.
+        
         Following \cite{original}, the used materials are:
         
         \begin{itemize}
@@ -175,12 +322,10 @@
         
         The polysilicon used is considered to be isotropic, with mass density \(\rho _{poly} =2320kg/m^3\) and Young's modulus of \(E_{poly}=169GPa\). The other default material properties are left unchanged.
         
-        \bigskip
-         \subsubsection{Moving Mesh}
+         \subsection{Moving Mesh}
         The air domain was defined as a \textbf{Deforming Domain} in the \textit{Moving Mesh} section. In order to take into account the symmetries of the model, \textbf{Symmetry/Roller} were applied on the air domain boundaries, corresponding to the planes \(z=0, y=0\) and \(x=0\), see \ref{fig:symmetry-planes}. However, the Symmetry/Roller forces to zero the displacement of the moving mesh perpendicular to the selected boundary (\(\overset{\rightharpoonup}{u}\cdot\hat{n}=0\)), therefore, not all these three conditions could be enabled simultaneously. Depending on the type of simulation performed (acceleration along the X axis or Y axis), one of the three symmetry planes becomes, as a matter of fact, an antisymmetry plane and displacements of the moving mesh perpendicular to that plane must be allowed: for example, if an acceleration along X axis is simulated, the Symmetry/Roller associated to the plane \(x=0\) must be disabled.
         
-        \bigskip
-        \subsubsection{Solid Mechanics}
+        \subsection{Solid Mechanics}
         
         In the \textit{Solid Mechanics} module, similar boundary symmetries were defined: polysilicon boundaries that lay on one of the symmetry planes were included in the \textbf{Boundary Symmetry} or \textbf{Boundary Antisymmetry} object associated to that plane. Similarly to what was explained before, depending on the current simulation the symmetries and antisymmetries will change: if an X acceleration has to be simulated, the \(x=0\) plane becomes an antisymmetry plane, whereas the \(y=0\) plane is a symmetry plane; the opposite happens for Y acceleration simulations. The plane \(z=0\) will always be a symmetry plane for our studies, given that no accelerations along Z axis will be simulated. All these conditions are already defined inside the \textit{Solid Mechanics} module and they just need to be enabled/disabled. On the bottom boundaries of the fixed fingers and anchor domains, a \textbf{Fixed Constraint} condition is applied, as shown in figure \ref{fig:fixed-bound}. This prevents these domains from moving.
         
@@ -204,10 +349,10 @@
         where \(g=9.81m/s^2\) is the gravity acceleration, whereas \(a_x\) and \(a_y\) are two model parameters. These are two pure numbers used to define the external acceleration as a multiple of \(g\).
         
         
-        
+        \iffalse
         \bigskip
-        \subsubsection{Electrostatics}
-        In the \textit{Electrostatics} module, after applying the \textbf{Charge Conservation} to all the domains, air included, one horizontal and one vertical fingers were defined as \textbf{Terminals} of type \textit{Voltage}, with an applied voltage of \(1mV\). The fixed fingers boundaries that face those terminals were defined as \textbf{Ground} boundaries. This was necessary in order to evaluate the total equivalent capacitance between one pair of vertical/horizontal movable and fixed fingers. To include in the capacitance evaluation all the capacitances of a single movable-fixed fingers pair (two longitudinal and one transverse, see \ref{sssec:capacity}), the ground boundaries were selected as shown in figure \ref{fig:grounds}.
+        \subsection{Electrostatics}
+        In the \textit{Electrostatics} module, after applying the \textbf{Charge Conservation} to all the domains, air included, one horizontal and one vertical fingers were defined as \textbf{Terminals} of type \textit{Voltage}, with an applied voltage of \(1mV\). The fixed fingers boundaries that face those terminals were defined as \textbf{Ground} boundaries. This was necessary in order to evaluate the total equivalent capacitance between one pair of vertical/horizontal movable and fixed fingers. To include in the capacitance evaluation all the capacitances of a single movable-fixed fingers pair (two longitudinal and one transverse, see section \ref{sssec:capacity}), the ground boundaries were selected as shown in figure \ref{fig:grounds}.
         
         \begin{figure}[!h]
             \centering
@@ -216,16 +361,15 @@
             \label{fig:grounds}
         \end{figure}
         
+        The value of \(1mV\) applied to the terminals as a bias to sense the capacitance was chosen small enough so that electromechanical forces applied by the \textit{Multiphysics} module added only a negligible offset to the displacement of the mass. This way we can obtain the total capacitance of a single movable-fixed fingers pair, where, however, the cross capacitance between adjacent movable fingers was neglected.
         The total X or Y differential capacitance can be simply obtained using equation ...
         
-        The value of \(1mV\) applied to the terminals as a bias to sense the capacitance was chosen small enough so that electromechanical forces applied by the \textit{Multiphysics} module added only a negligible offset to the displacement of the mass.
-        
         \bigskip
-        \subsubsection{Multiphysics}
+        \subsection{Multiphysics}        
         The module used in this section is the \textbf{Electromechanical Forces}, which couples the \textit{Solid Mechanics} and \textit{Electrostatics} modules. Its settings were left as default.
         
-        \bigskip
-        \subsubsection{Mesh and Study}
+        \fi
+        \subsection{Mesh and Study}
         The used mesh was of type \textit{physics-controlled} with element size set to \textbf{coarse}, in order to follow what done by the authors of \cite{original}.
         
         Given that our interest is in the steady state of the system in different conditions, 4 \textbf{stationary} studies were defined:
@@ -237,10 +381,33 @@
         \end{itemize}
         In all four studies, the \textit{direct stationary solver} and the \textit{suggested direct solver} were set to \textbf{MUMPS}.
         
-    \subsection{Simulation Results}
-    \subsubsection{\(a_x\) parametric sweep}
+    \section{Simulation Results}
+    \subsection{\(a_x\) parametric sweep}\label{sse:ax_sweep_results}
     The 3D plots for this simulation are presented in figures \ref{fig:disp_ax}, \ref{fig:disp_ax_det}, \ref{fig:stress_ax} and \ref{fig:stress_ax_det}.
-     
+    
+    The maximum displacements along the X axis of the inertial mass are listed in table \ref{tab:max_x_disp}.
+    
+    \begin{table}[h]
+        \caption{Maximum X displacement of the inertial mass for \(a_x\) accelerations between 1g and 50g.}
+        \renewcommand{\arraystretch}{1.5}
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{\(a_x\) [g]} & \textbf{Maximum X displacement [\(\mu\)m]} \\ \hline
+            1.0000       & 0.0047630                 \\ \hline
+            6.4444       & 0.030692                \\ \hline
+            11.889       & 0.056615                \\ \hline
+            17.333       & 0.082532                 \\ \hline
+            22.778       & 0.10844                 \\ \hline
+            28.222       & 0.13435                 \\ \hline
+            33.667       & 0.16025                 \\ \hline
+            39.111       & 0.18614                 \\ \hline
+            44.556       & 0.21202                 \\ \hline
+            50.000       & 0.23790                 \\ \hline
+        \end{tabular}
+        \label{tab:max_x_disp}
+    \end{table}
+    
     \begin{figure}[!h]
         \centering
         \includegraphics[width=1.0\linewidth]{displacement_ax}
@@ -255,7 +422,30 @@
         \label{fig:disp_ax_det}
     \end{figure}
     
-    The maximum von Mises stress simulated for \(a_x=50g\) is \(4.2991\cdot10^6Pa\), which is almost identical to what is obtained in \cite{original} (\(4.5594\cdot10^6Pa\)). Therefore the conclusions are analogous: according to \cite{fracture}, the minimum fracture strength of polysilicon is \((2.9\pm 0.5)GPa\) (tensile stress), which is far higher then what we simulated at \(a_x=50g\), so there are no structural problems at this acceleration.
+    The maximum von Mises stress evaluated for different accelerations on the polysilicon structure is listed in table \ref{tab:max_x_stress}.
+    
+        \begin{table}[h]
+        \caption{Maximum Von Mises stress of the polysilicon structure for \(a_x\) accelerations between 1g and 50g.}
+        \renewcommand{\arraystretch}{1.5}
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{\(a_x\) [g]} & \textbf{Maximum Von Mises stress [MPa]} \\ \hline
+            1.0000       & 0.087655                 \\ \hline
+            6.4444       & 0.56487                \\ \hline
+            11.889       & 1.0420                \\ \hline
+            17.333       & 1.5192                 \\ \hline
+            22.778       & 1.9962                 \\ \hline
+            28.222       & 2.4732                 \\ \hline
+            33.667       & 2.9502                 \\ \hline
+            39.111       & 3.4271                 \\ \hline
+            44.556       & 3.9039                 \\ \hline
+            50.000       & 4.3807                 \\ \hline
+        \end{tabular}
+        \label{tab:max_x_stress}
+    \end{table}
+    
+    The maximum von Mises stress simulated for \(a_x=50g\) is \(4.3807\cdot10^6Pa\), which is almost identical to what is obtained in \cite{original} (\(4.5594\cdot10^6Pa\)). Therefore the conclusions are analogous: according to \cite{fracture}, the minimum fracture strength of polysilicon is \((2.9\pm 0.5)GPa\) (tensile stress), which is far higher then what we simulated at \(a_x=50g\), so there are no structural problems at this acceleration.
     
     \begin{figure}[!h]
         \centering
@@ -271,14 +461,75 @@
         \label{fig:stress_ax_det}
     \end{figure}
     
-    \begin{figure}
+    In figure \ref{plt:x_disp} we can see that the relationship between the x displacement and the x acceleration (therefore, the force) is quite linear, which means that the equivalent x stiffness is constant in the applied range of accelerations, as predicted by our model. The inverse of the mean slope of this curve multiplied by the total simulated inertial mass (\(\frac{m}{8}\)) gives us an equivalent x stiffness \(k_{x,reduced}=2.1411N/m\). Using equation \ref{eq:k_x_red}, we obtain \(k_x=17.1287N/m\).
+    \begin{figure}[!h]
         \centering
-        \input{tikz/x_disp_plot.pgf}
+        \input{tikz/x_disp.tex}
+        \caption{Maximum displacement of the inertial mass along X axis for \(a_x\) accelerations between \(1g\) and \(50g\).}
+        \label{plt:x_disp}
     \end{figure}
     
+    As explained in section \ref{sssec:stiffness}, the x displacement sensitivity corresponds to the x displacement of the movable fingers for \(a_x=1g\). Considering the movable fingers as rigid bodies anchored to the central mass, we can evaluate the maximum displacement of the central mass, instead of the fingers'. The obtained sensitivity is \(S_x=0.004763\mu m\).
+    
+    \begin{table}[h]
+        \caption{Comparison of simulated and theoretical values for the X equivalent stiffness and \(S_x\) sensitivity.}
+        \renewcommand{\arraystretch}{1.5}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Device Property} & \textbf{COMSOL} & \textbf{Theoretical}\\ \hline
+            \(k_x\) [N/m]       & 17.1287   & 31.5335             \\ \hline
+            \(S_x\) [\(\mu\)m]  & 0.004763  & 0.002587              \\ \hline
+        \end{tabular}
+        \label{tab:ax_sweep_comparison}
+    \end{table}
+    
+    As we can see from this table, the difference with the predicted values is considerable: the simulated value is almost half of the stiffness obtained with our theoretical model. This is reasonable and it is due to the fact that we approximated the folded beam segments as fixed when applying accelerations along the x axis. As it is possible to notice from the displacement plot, this is not true and the two segments and the junction move as well. This implies that the total equivalent x stiffness is obtained from the series of two springs: the straight beam, with spring constant equal to the \(k_x\) calculated in section \ref{sssec:stiffness}, and the folded beam, with spring constant equal to the equivalent x stiffness of a folded beam structure. The fact that these springs are in series explains why the obtained stiffness is much smaller than the predicted one. 
+    
+    This x stiffness of the folded beam could be evaluated through analytical expressions, thanks to a more accurate model of the structure. However, this analysis goes beyond the scope of this report. On the other hand, it would be possible to retrieve an approximation of this stiffness value by using the inverse formula for springs in series:
+    
+    \begin{equation}\label{eq:kx_adjust}
+        k_{x,COMSOL}=\frac{k_{x,straight}k_{x,folded,tot}}{k_{x,straight}+k_{x,folded,tot}}
+    \end{equation}
+    
+    where \(k_{x,straight}=31.5335N/m\) is the total stiffness of the straight beams, \(k_{x,COMSOL}=17.1287N/m\) is the stiffness obtained with the simulation and \(k_{x,folded,tot}\) is the total x stiffness of all the folded beams combined.
+    
+    \begin{equation}\label{eq:kx_folded_tot}
+        k_{x,folded,tot}=\frac{k_{x,COMSOL}k_{x,straight}}{k_{x,straight}-k_{x,COMSOL}}=37.4964N/m
+    \end{equation}
+    
+    Therefore, the equivalent x stiffness of a single folded beam, supposing the four folded beams springs in parallel:
+    
+    \begin{equation}\label{eq:kx_folded}
+        k_{x,folded}=\frac{k_{x,folded,tot}}{4}=9.3741N/m
+    \end{equation}
+    
     \bigskip
-    \subsubsection{\(a_y\) parametric sweep}
+    \subsection{\(a_y\) parametric sweep}
     The 3D plots for this simulation are presented in figures \ref{fig:disp_ay}, \ref{fig:disp_ay_det}, \ref{fig:stress_ay} and \ref{fig:stress_ay_det}.
+    
+    The maximum displacements along the X axis of the inertial mass are listed in table \ref{tab:max_y_disp}.
+    
+    \begin{table}[h]
+        \caption{Maximum Y displacement of the inertial mass for \(a_y\) accelerations between 1g and 50g.}
+        \renewcommand{\arraystretch}{1.5}
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{\(a_y\) [g]} & \textbf{Maximum Y displacement [\(\mu\)m]} \\ \hline
+            1.0000       & 0.0024836                 \\ \hline
+            6.4444       & 0.016005                \\ \hline
+            11.889       & 0.029527                \\ \hline
+            17.333       & 0.043049                 \\ \hline
+            22.778       & 0.056571                 \\ \hline
+            28.222       & 0.070092                 \\ \hline
+            33.667       & 0.083614                 \\ \hline
+            39.111       & 0.097136                 \\ \hline
+            44.556       & 0.11066                 \\ \hline
+            50.000       & 0.12418                 \\ \hline
+        \end{tabular}
+        \label{tab:max_y_disp}
+    \end{table}
     
     \begin{figure}[!h]
         \centering
@@ -294,7 +545,30 @@
         \label{fig:disp_ay_det}
     \end{figure}
     
-    The maximum von Mises stress simulated for \(a_y=50g\) is \(2.6339\cdot10^6Pa\), which is almost identical to what is obtained in \cite{original} (\(2.5348\cdot10^6Pa\)). The same conclusions as before apply.
+    The maximum von Mises stress evaluated for different accelerations on the polysilicon structure is listed in table \ref{tab:max_y_stress}.
+    
+    \begin{table}[h]
+        \caption{Maximum Von Mises stress of the polysilicon structure for \(a_y\) accelerations between 1g and 50g.}
+        \renewcommand{\arraystretch}{1.5}
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+            \textbf{\(a_y\) [g]} & \textbf{Maximum Von Mises stress [MPa]} \\ \hline
+            1.0000       & 0.052332                 \\ \hline
+            6.4444       & 0.33725                \\ \hline
+            11.889       & 0.62217                \\ \hline
+            17.333       & 0.90709                 \\ \hline
+            22.778       & 1.1920                 \\ \hline
+            28.222       & 1.4769                 \\ \hline
+            33.667       & 1.7618                 \\ \hline
+            39.111       & 2.0468                 \\ \hline
+            44.556       & 2.3317                 \\ \hline
+            50.000       & 2.6166                 \\ \hline
+        \end{tabular}
+        \label{tab:max_y_stress}
+    \end{table}
+    
+    The maximum von Mises stress simulated for \(a_y=50g\) is \(2.6166\cdot10^6Pa\), which is almost identical to what is obtained in \cite{original} (\(2.5348\cdot10^6Pa\)). The same conclusions as before apply.
     
     \begin{figure}[!h]
         \centering
@@ -310,14 +584,204 @@
         \label{fig:stress_ay_det}
     \end{figure}
     
-    \bigskip
-    \subsubsection{\(t_{bx}\) parametric sweep}
+    In figure \ref{plt:y_disp} we can see that the relationship between the y displacement and the y acceleration (therefore, the force) is here as well quite linear, which means that the equivalent y stiffness is constant in the applied range of accelerations, as predicted by our model. The inverse of the mean slope of this curve multiplied by the total simulated inertial mass (\(\frac{m}{8}\)) gives us an equivalent y stiffness \(k_{y,reduced}=4.104N/m\). Using equation \ref{eq:k_y_red}, we obtain \(k_y=32.832N/m\).    
+    \begin{figure}[!h]
+        \centering
+        \input{tikz/y_disp.tex}
+        \caption{Maximum displacement along Y axis for \(a_y\) accelerations between \(1g\) and \(50g\).}
+        \label{plt:y_disp}
+    \end{figure}
+    
+    As explained in section \ref{sssec:stiffness}, the y displacement sensitivity corresponds to the y displacement of the movable fingers for \(a_y=1g\). Considering the movable fingers as rigid bodies anchored to the central mass, we can evaluate the maximum displacement of the central mass, instead of the fingers'. The obtained sensitivity is \(S_y=0.0024836\mu m\).
+    
+    \begin{table}[h]
+        \caption{Comparison of simulated and theoretical values for the Y equivalent stiffness and \(S_y\) sensitivity.}
+        \renewcommand{\arraystretch}{1.5}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Device Property} & \textbf{COMSOL} & \textbf{Theoretical}\\ \hline
+            \(k_y\) [N/m]       & 32.832   & 31.5335             \\ \hline
+            \(S_y\) [\(\mu\)m]  & 0.0024836  & 0.002587              \\ \hline
+        \end{tabular}
+        \label{tab:ay_sweep_comparison}
+    \end{table}
+    
+    Here, simulated results are quite similar to the predicted values, since no big approximation was made in the model of the Y springs.
     
     \bigskip
-    \subsubsection{\(w_{bx}\) parametric sweep}
-        
+    \subsection{\(t_{bx}\) parametric sweep}\label{sse:tbx_sweep_study}
+    Through this simulation, it was possible to verify that the \(S_x\) sensitivity is inversely proportional to the thickness of the straight beam, as anticipated by equation \ref{eq:x_sens}.
+    
+    \begin{figure}[!h]
+        \centering
+        \input{tikz/tbx_sweep.tex}
+        \caption{Displacement sensitivity along X axis \(S_x\) for thicknesses of the straight beam \(t_{bx}\) between \(1\mu m\) and \(30\mu m\). The orange curve is the plot of equation \ref{eq:x_sens} against \(t_{bx}\).}
+        \label{plt:tbx_sweep}
+    \end{figure}
+    
+    A comparison between the theoretical and simulated values is presented in table \ref{tab:tbx_sweep}.
+    
+    \begin{table}[h]
+        \caption{Displacement sensitivity along X axis for different \(t_{bx}\) values.}
+        \renewcommand{\arraystretch}{1.2}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{\(t_{bx}\) [\(\mu\)m]} & \textbf{COMSOL \(S_x\) [\(\mu\)m]} & \textbf{Theoretical \(S_x\) [\(\mu\)m]}\\ \hline
+            1.0000       & 0.012833      & 0.01034695                \\ \hline
+            2.5263       & 0.0064067     & 0.00409567                \\ \hline
+            4.0526       & 0.0047361     & 0.00255314                \\ \hline
+            5.5789       & 0.0039404     & 0.00185464                \\ \hline
+            7.1053       & 0.0034515     & 0.00145624                \\ \hline
+            8.6316       & 0.0031239     & 0.00119873               \\ \hline
+            10.158       & 0.0028837     & 0.00101861                \\ \hline
+            11.684       & 0.0026959     & 0.00088555                \\ \hline
+            13.211       & 0.0025476     & 0.00078324                \\ \hline
+            14.737       & 0.0024241     & 0.00070211                \\ \hline
+            16.263       & 0.0023210     & 0.00063622                \\ \hline
+            17.789       & 0.0022335     & 0.00058163               \\ \hline
+            19.316       & 0.0021566     & 0.00053567                \\ \hline
+            20.842       & 0.0020895     & 0.00049644                \\ \hline
+            22.368       & 0.0020420     & 0.00046257               \\ \hline
+            23.895       & 0.0019917     & 0.00043302               \\ \hline
+            25.421       & 0.0019472     & 0.00040702               \\ \hline
+            26.947       & 0.0019047     & 0.00038397               \\ \hline
+            28.474       & 0.0018667     & 0.00036339               \\ \hline
+            30.000       & 0.0018336     & 0.0003449               \\ \hline
+        \end{tabular}
+        \label{tab:tbx_sweep}
+    \end{table}
+    
+    As already discussed in section \ref{sse:ax_sweep_results}, the theoretical model differs from the COMSOL simulation results because the equivalent x stiffness of the folded beams was not considered for simplicity. It is possible to compare the relative errors made for the x displacement sensitivity evaluation between the COMSOL simulation and the theoretical model with and without this approximation. The analytical expression for the displacement sensitivity considering the x stiffness of the folded beams can be obtained from equation \ref{eq:x_sens}, replacing \(k_x\) with \ref{eq:kx_adjust}, where \(k_{x,folded,tot}\) is evaluated in equation \ref{eq:kx_folded_tot}. The result is shown in figure \ref{plt:tbx_errors}. The theoretical adjusted sensitivity values can be found in table \ref{tab:tbx_sweep_adj}.
+    
+    \begin{figure}[!h]
+        \centering
+        \input{tikz/tbx_errors.tex}
+        \caption{Relative error of \(S_x\) between the COMSOL simulation and the theoretical model with and without approximation on the stiffness of the folded beams.}
+        \label{plt:tbx_errors}
+    \end{figure}
+    
+     \begin{table}[!h]
+        \caption{Displacement sensitivity along X axis for different \(t_{bx}\) values. Adjusted model inclusive of folded beams x stiffness.}
+        \renewcommand{\arraystretch}{1.2}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{\(t_{bx}\) [\(\mu\)m]} & \textbf{COMSOL \(S_x\) [\(\mu\)m]} & \textbf{Theoretical adjusted \(S_x\) [\(\mu\)m]}\\ \hline
+            1.0000       & 0.012833      & 0.01252233                 \\ \hline
+            2.5263       & 0.0064067     & 0.00627105                 \\ \hline
+            4.0526       & 0.0047361     & 0.00472853                \\ \hline
+            5.5789       & 0.0039404     & 0.00403002                 \\ \hline
+            7.1053       & 0.0034515     & 0.00363162                 \\ \hline
+            8.6316       & 0.0031239     & 0.00337411               \\ \hline
+            10.158       & 0.0028837     & 0.00319399                 \\ \hline
+            11.684       & 0.0026959     & 0.00306093                 \\ \hline
+            13.211       & 0.0025476     & 0.00295862                 \\ \hline
+            14.737       & 0.0024241     & 0.0028775                  \\ \hline
+            16.263       & 0.0023210     & 0.0028116                  \\ \hline
+            17.789       & 0.0022335     & 0.00275702               \\ \hline
+            19.316       & 0.0021566     & 0.00271106                 \\ \hline
+            20.842       & 0.0020895     & 0.00267183                 \\ \hline
+            22.368       & 0.0020420     & 0.00263795                \\ \hline
+            23.895       & 0.0019917     & 0.0026084                 \\ \hline
+            25.421       & 0.0019472     & 0.00258241                \\ \hline
+            26.947       & 0.0019047     & 0.00255935               \\ \hline
+            28.474       & 0.0018667     & 0.00253877                \\ \hline
+            30.000       & 0.0018336     & 0.00252028               \\ \hline
+        \end{tabular}
+        \label{tab:tbx_sweep_adj}
+    \end{table}
+    
+    \newpage
+    \subsection{\(w_{bx}\) parametric sweep}
+    Through this simulation, it was possible to verify that the \(S_x\) sensitivity is inversely proportional to the cubic power of the width of the straight beam, as anticipated by equation \ref{eq:x_sens}.
+    
+    \begin{figure}[!h]
+        \centering
+        \input{tikz/wbx_sweep.tex}
+        \caption{Displacement sensitivity along X axis \(S_x\) for thicknesses of the straight beam \(w_{bx}\) between \(4 \mu m\) and \(20\mu m\). The orange curve is the plot of equation \ref{eq:x_sens} against \(w_{bx}\).}.
+        \label{plt:wbx_sweep}
+    \end{figure}
+    
+    
+    A comparison between the theoretical and simulated values is presented in table \ref{tab:wbx_sweep}.
+    
+    \begin{table}[h]
+        \caption{Displacement sensitivity along X axis for different \(w_{bx}\) values.}
+        \renewcommand{\arraystretch}{1.2}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{\(w_{bx}\) [\(\mu\)m]} & \textbf{COMSOL \(S_x\) [\(\mu\)m]} & \textbf{Theoretical \(S_x\) [\(\mu\)m]}\\ \hline
+            4.0000       & 0.32367      & 0.32334224                 \\ \hline
+            4.8421       & 0.18546     & 0.1822803                  \\ \hline
+            5.6842       & 0.11608     & 0.11267614                 \\ \hline
+            6.5263       & 0.078004     & 0.07444545                 \\ \hline
+            7.3684       & 0.055130     & 0.05172722                 \\ \hline
+            8.2105       & 0.040408     & 0.03738776                \\ \hline
+            9.0526       & 0.030917     & 0.02789446                   \\ \hline
+            9.8947       & 0.024271     & 0.0213614                 \\ \hline
+            10.737       & 0.019561     & 0.01671909                 \\ \hline
+            11.579       & 0.016106     & 0.01333015                 \\ \hline
+            12.421       & 0.013517     & 0.01079859                \\ \hline
+            13.263       & 0.011525     & 0.00886955                \\ \hline
+            14.105       & 0.0099635     & 0.00737393                 \\ \hline
+            14.947       & 0.0087316     & 0.00619652                 \\ \hline
+            15.789       & 0.0077321     & 0.00525702                \\ \hline
+            16.632       & 0.0069123     & 0.00449823                \\ \hline
+            17.474       & 0.0062323     & 0.00387872               \\ \hline
+            18.316       & 0.0056619     & 0.00336795               \\ \hline
+            19.158       & 0.0051798     & 0.00294306               \\ \hline
+            20.000       & 0.0047630     & 0.00258674               \\ \hline
+        \end{tabular}
+        \label{tab:wbx_sweep}
+    \end{table}
+    
+    Conclusions analogous to the ones of the previous study can be drawn. The model can be adjusted by considering the equivalent x stiffness of the folded beams. The improvement obtained in the relative error made in the evaluation of the x displacement sensitivity is shown in figure \ref{plt:wbx_errors}. The new adjusted values are listed in table \ref{tab:wbx_sweep_adj}.
+    
+    \begin{figure}[!h]
+        \centering
+        \input{tikz/wbx_errors.tex}
+        \caption{Relative error of \(S_x\) between the COMSOL simulation and the theoretical model with and without approximation on the stiffness of the folded beams.}
+        \label{plt:wbx_errors}
+    \end{figure}
+    
+    \begin{table}[h]
+        \caption{Displacement sensitivity along X axis for different \(w_{bx}\) values. Adjusted model inclusive of folded beams x stiffness.}
+        \renewcommand{\arraystretch}{1.2}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{\(w_{bx}\) [\(\mu\)m]} & \textbf{COMSOL \(S_x\) [\(\mu\)m]} & \textbf{Theoretical adjusted \(S_x\) [\(\mu\)m]}\\ \hline
+            4.0000       & 0.32367      & 0.32551763                  \\ \hline
+            4.8421       & 0.18546     & 0.18445569                   \\ \hline
+            5.6842       & 0.11608     & 0.11485152                  \\ \hline
+            6.5263       & 0.078004     & 0.07662083                  \\ \hline
+            7.3684       & 0.055130     & 0.0539026                   \\ \hline
+            8.2105       & 0.040408     & 0.03956314                \\ \hline
+            9.0526       & 0.030917     & 0.03006984                    \\ \hline
+            9.8947       & 0.024271     & 0.02353678                  \\ \hline
+            10.737       & 0.019561     & 0.01889448                  \\ \hline
+            11.579       & 0.016106     & 0.01550554                  \\ \hline
+            12.421       & 0.013517     & 0.01297398                 \\ \hline
+            13.263       & 0.011525     & 0.01104493                \\ \hline
+            14.105       & 0.0099635     & 0.00954931                  \\ \hline
+            14.947       & 0.0087316     & 0.00837191                  \\ \hline
+            15.789       & 0.0077321     & 0.0074324                  \\ \hline
+            16.632       & 0.0069123     & 0.00667362                 \\ \hline
+            17.474       & 0.0062323     & 0.00605411                \\ \hline
+            18.316       & 0.0056619     & 0.00554333               \\ \hline
+            19.158       & 0.0051798     & 0.00511844               \\ \hline
+            20.000       & 0.0047630     & 0.00476212               \\ \hline
+        \end{tabular}
+        \label{tab:wbx_sweep_adj}
+    \end{table}
     
     \section{Conclusions}
+    The obtained results are coherent with the reference paper, from which the design idea of this dual-axis accelerometer was taken \cite{original}. In particular, the maximum stress of the polysilicon structure and the displacement sensitivities to input accelerations present negligible differences.
+    
+    However, the theoretical model proposed in \cite{original} is not very accurate for the prediction of the device stiffness along X axis, due to approximating the x stiffness of the folded beams as infinite, which turns out not to be true. Adjustments were made in order to compensate for this error. Nevertheless, the approximated model effectively managed to predict the dependency of the displacement sensitivity \(S_x\) as a function of the straight beam thickness \(t_{bx}\) and width \(w_{bx}\). This result can be helpful in the design and optimization of dual-axis accelerometers with T-shape beams.
     
     \printbibliography
 \end{document}
